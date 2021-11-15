@@ -4,6 +4,8 @@ import (
 	"math/rand"
 )
 
+const  count = 3
+
 type Character interface {
 	Attack(character Character)
 	Defend()
@@ -183,97 +185,121 @@ func (kg *King) StartDefense(point int) {
 
 func main()  {
 	//Приветствие
-	var choiceNull, choiceFirstCh, choiceSecondCh string
-	var Character1, Character2 Character
-	fmt.Println("Welcome to the game (Text Saga). You have to choose two characters to start playing. " +
-		"Press F to continue the game or Q to exit")
-	fmt.Scan(&choiceNull)
-	switch choiceNull {
-	case "F":
-		fmt.Println("You are welcome")
-	case "Q":
-		return
-	default:
-		fmt.Println("неизвестная комманда")
-		return
+	var choiceNull, choiceFirstCh string
+	var i int
+	i = 0
+	Characters:= [count]Character{}
+	for (i < 1) {
+		
+			fmt.Println("Welcome to the game (Text Saga). You have to choose two characters to start playing. " +
+				"Press F to continue the game or Q to exit")
+			fmt.Scan(&choiceNull)
+			switch choiceNull {
+			case "F":
+				fmt.Println("You are welcome")
+				i += 5
+				break
+			case "Q":
+				return
+			default:
+				fmt.Println("неизвестная комманда")
+				continue
+			}
 	}
-
 	//Выбор первого персонажа
-	fmt.Println("Choose Your hero: W - warrior, S - shaman, K - king")
-	fmt.Scan(&choiceFirstCh)
-	switch choiceFirstCh {
+	i = 0
+	for (i == 0) {
+		for u:= 0; u < count; u++ {
+			fmt.Println("Choose Your hero: W - warrior, S - shaman, K - king")
+			fmt.Scan(&choiceFirstCh)
+			switch choiceFirstCh {
 
-	case "W":
-		Character1 = &Warrior{Healths: 100, Strength: 10, Defense: 10, Confidence: 0}
-	case "S":
-		Character1 = &Shaman{Healths: 100, Strength: 5, Defense: 5, Ether: 0}
-	case "K":
-		Character1 = &King{Healths: 100, Strength: 15, Defense: 10, Fear: 0}
+			case "W":
+				Characters[u] = &Warrior{Healths: 100, Strength: 10, Defense: 10, Confidence: 0}
+				i += 5
+				break
+			case "S":
+				Characters[u] = &Shaman{Healths: 100, Strength: 5, Defense: 5, Ether: 0}
+				i += 5
+				break
+			case "K":
+				Characters[u] = &King{Healths: 100, Strength: 15, Defense: 10, Fear: 0}
+				i += 5
+				break
+			default:
+				fmt.Println("неизвестная комманда")
+				continue
+			}
+		}
 	}
-	//Выбор Второго персонажа
-	fmt.Println("Choose Opponent hero: W - warrior, S - shaman, K - king")
-	fmt.Scan(&choiceSecondCh)
-	switch  choiceSecondCh{
 
-	case "W":
-		Character2 = &Warrior{Healths: 100, Strength: 10, Defense: 10, Confidence: 0}
-	case "S":
-		Character2 = &Shaman{Healths: 100, Strength: 5, Defense: 5, Ether: 0}
-	case "K":
-		Character2 = &King{Healths: 100, Strength: 15, Defense: 10, Fear: 0}
-	default:
-		fmt.Println("неизвестная комманда")
-		return
-	}
+	var choice,p int //Реализация Боя
+	p = 0
+	for Characters[0].Health() >= 0 || Characters[2].Health() >= 0 {
+		for (p == 0){
 
-	var choice int //Реализация Боя
-	for Character1.Health() != 0 || Character2.Health() != 0 {
 		fmt.Println("Choose Your character action: 1 - attack, 2 - defense, 3 - first ability (you need 10), 4 - second ability(you need 20), 9 - exit in Windows")
 		fmt.Scan(&choice)
 		switch choice {
 		case 1:
-			Character1.Attack(Character2)
+			Characters[0].Attack(Characters[1])
+			p += 5
+			break
 		case 2:
-			Character1.Defend()
-
+			Characters[0].Defend()
+			p += 5
+			break
 		case 3:
-			Character1.ability1(Character2)
-
+			Characters[0].ability1(Characters[1])
+			p += 5
+			break
 		case 4:
-			Character1.ability2(Character2)
-
+			Characters[0].ability2(Characters[1])
+			p += 5
+			break
 		case 9:
 			return
 		default:
 			fmt.Println("неизвестная комманда")
-			return
+			continue
 		}
 
-		if Character2.Health() <= 0 {
+		if Characters[1].Health() <= 0 {
 			fmt.Println("The first one won")
 			return
 		}
-
-		fmt.Println("Choose Opponent character action: 1 - attack, 2 - defense, 3 - first skill(you need 10), 4 - second skill(you need 20), 9 - exit")
-		fmt.Scan(&choice)
-		switch choice {
-		case 1:
-			Character2.Attack(Character1)
-		case 2:
-			Character2.Defend()
-		case 3:
-			Character2.ability1(Character1)
-		case 4:
-			Character2.ability2(Character1)
-		case 9:
-			return
-		default:
-			fmt.Println("неизвестная комманда")
-			return
 		}
-		if Character1.Health() <= 0 {
-			fmt.Println("The second one won")
-			return
+		p = 0
+		for (p == 0) {
+			fmt.Println("Choose Opponent character action: 1 - attack, 2 - defense, 3 - first skill(you need 10), 4 - second skill(you need 20), 9 - exit")
+			fmt.Scan(&choice)
+			switch choice {
+			case 1:
+				Characters[1].Attack(Characters[0])
+				p += 5
+				break
+			case 2:
+				Characters[1].Defend()
+				p += 5
+				break
+			case 3:
+				Characters[1].ability1(Characters[0])
+				p += 5
+				break
+			case 4:
+				Characters[1].ability2(Characters[0])
+				p += 5
+				break
+			case 9:
+				return
+			default:
+				fmt.Println("неизвестная комманда")
+				continue
+			}
+			if Characters[0].Health() <= 0 {
+				fmt.Println("The second one won")
+				return
+			}
 		}
 	}
 }
