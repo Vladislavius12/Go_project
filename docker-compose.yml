@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  courseproject:
+    image: Go_project
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 5300:5300
