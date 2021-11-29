@@ -28,7 +28,7 @@ func main() {
 	CheckError(e)
 
 	insertDynStmt := `insert into "Employee" ("Name", "EmpId") values($1, $2)`
-	_, e := db.Exec(insertDynStmt, "krish", 03)
+	_, e = db.Exec(insertDynStmt, "krish", 03)
 	CheckError(e)
 
 }
