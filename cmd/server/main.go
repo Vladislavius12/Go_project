@@ -4,8 +4,8 @@ import (
 	"log"
 	"net"
 
-	"github.com/.../GoProj/pkg/api"
-	"github.com/.../GoProj/pkg/auth"
+	"github.com/Vladislavius12/Go_project/pkg/api"
+	"github.com/Vladislavius12/Go_project/pkg/auth"
 
 	"google.golang.org/grpc"
 )

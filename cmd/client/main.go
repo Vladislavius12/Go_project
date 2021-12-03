@@ -5,7 +5,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/.../GoProj/pkg/api"
+	"github.com/Vladislavius12/Go_project/pkg/api"
 	"google.golang.org/grpc"
 )
 
