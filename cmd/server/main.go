@@ -15,7 +15,8 @@ func main() {
 	srv := &auth.AUTHServer{}
 	api.RegisterAuthServer(s, srv)
 	auth.Connect()
-
+	//auth.GetID()
+	//auth.GetPassword()
 	l, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		log.Fatal(err)
