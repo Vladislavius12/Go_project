@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+
 	flag.Parse()
 	if flag.NArg() < 2 {
 		log.Fatal("not enough arguments")
@@ -31,4 +32,5 @@ func main() {
 	}
 
 	log.Println(res.GetRes())
+
 }
