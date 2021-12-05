@@ -2,16 +2,16 @@ package auth
 
 import (
 	"context"
+	"crypto/rand"
+	"crypto/rsa"
 	"fmt"
 
 	"database/sql"
 
+	"github.com/Vladislavius12/Go_project/crypto"
 	pb "github.com/Vladislavius12/Go_project/pkg/api"
 	_ "github.com/lib/pq"
 )
-
-var lg, psw string
-var id int
 
 const (
 	host     = "localhost"
@@ -34,43 +34,34 @@ type AUTHServer struct{ pb.UnimplementedAuthServer }
 // Auth ...
 func (s *AUTHServer) Auth(ctx context.Context, req *pb.AuthRequest) (*pb.AuthResponse, error) {
 	var choiceNull, newName, newPass string
-	var a int
-	//a = "123"
-	//var b string
-	//b = "123"
+	var pas string
+	var name string
+	var criptLogin string
+	var criptPass string
+	var descriptLogin string
+	var descriptPass string
 
-	psw = "123"
-	lg = "TEST"
+	name = req.GetLogin()
+	pas = req.GetPassword()
 
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	CheckError(err)
+	criptLogin = crypto.Cripting(GetID(name), *privateKey)
+	criptPass = crypto.Cripting(GetPassword(pas), *privateKey)
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
 	db, err := sql.Open("postgres", psqlconn)
 	CheckError(err)
 	defer db.Close()
-	row, err := db.Query("SELECT id FROM users where pass='" + psw + "' and login='" + lg + "'")
-	if err != nil {
-		panic(err)
-	}
-	defer row.Close()
-	datas := []data{}
 
-	for row.Next() {
-		p := data{}
-		err := row.Scan(&p.id)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-		datas = append(datas, p)
-		fmt.Println(p.id)
-		p.id = a
-	}
+	descriptLogin = crypto.RSA_OAEP_Decrypt(criptLogin, *privateKey)
+	descriptPass = crypto.RSA_OAEP_Decrypt(criptPass, *privateKey)
 
-	if id != 0 { //req.GetLogin() == a && req.GetPassword() == b
-		//row = nil
+	if name == criptLogin && pas == criptPass {
 		return &pb.AuthResponse{Res: "Hello"}, nil
 	} else {
-		fmt.Println()
+		fmt.Println(descriptLogin)
+		fmt.Println(descriptPass)
 		fmt.Println("user name not found. Would you like to register? (Y,N)")
 		fmt.Scan(&choiceNull)
 		switch choiceNull {
@@ -115,8 +106,7 @@ func Connect() {
 	fmt.Println("Connected!")
 }
 
-/*
-func GetID() {
+func GetID(name string) string {
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
 	// open db
@@ -124,7 +114,7 @@ func GetID() {
 	CheckError(err)
 	defer db.Close()
 
-	row, err := db.Query("SELECT login FROM users")
+	row, err := db.Query("SELECT login FROM users where login='" + name + "'")
 	if err != nil {
 		panic(err)
 	}
@@ -139,14 +129,13 @@ func GetID() {
 			continue
 		}
 		datas = append(datas, p)
+		fmt.Println(p.login)
+		p.login = name
 	}
-	for _, p := range datas {
-		lg = p.login
-		//fmt.Println(p.login)
-	}
+	return name
 }
 
-func GetPassword() {
+func GetPassword(pas string) string {
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
 	// open db
@@ -154,7 +143,7 @@ func GetPassword() {
 	CheckError(err)
 	defer db.Close()
 
-	row, err := db.Query("SELECT * FROM users where pass='psw' and login='lg'")
+	row, err := db.Query("SELECT pass FROM users where pass='" + pas + "'")
 	if err != nil {
 		panic(err)
 	}
@@ -169,13 +158,12 @@ func GetPassword() {
 			continue
 		}
 		datas = append(datas, p)
+		fmt.Println(p.pass)
+		p.pass = pas
 	}
-	for _, p := range datas {
-		psw = p.pass
-		fmt.Println(row)
-	}
+	return pas
 }
-*/
+
 func CheckError(err error) {
 	if err != nil {
 		panic(err)

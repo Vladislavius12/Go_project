@@ -1,4 +1,4 @@
-package main
+package crypto
 
 import (
 	"crypto/rand"
@@ -8,22 +8,19 @@ import (
 	"fmt"
 )
 
-func main() {
-	Cripting("lol")
-}
-
-func Cripting(pass string) {
-	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
-	CheckError(err)
-
+func Cripting(pass string, privKey rsa.PrivateKey) string {
+	//privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	privateKey := privKey
+	//CheckError(err)
 	publicKey := privateKey.PublicKey
 	secretMessage := pass
 
 	encryptedMessage := RSA_OAEP_Encrypt(secretMessage, publicKey)
 
-	fmt.Println("Cipher Text:", encryptedMessage)
+	//fmt.Println("Cipher Text:", encryptedMessage)
 
-	RSA_OAEP_Decrypt(encryptedMessage, *privateKey)
+	//RSA_OAEP_Decrypt(encryptedMessage, privateKey)
+	return encryptedMessage
 }
 
 func CheckError(e error) {
@@ -47,6 +44,6 @@ func RSA_OAEP_Decrypt(cipherText string, privKey rsa.PrivateKey) string {
 	rng := rand.Reader
 	plaintext, err := rsa.DecryptOAEP(sha256.New(), rng, &privKey, ct, label)
 	CheckError(err)
-	fmt.Println("Plaintext:", string(plaintext))
+	//fmt.Println("Your data is:", string(plaintext))
 	return string(plaintext)
 }
