@@ -34,27 +34,43 @@ type AUTHServer struct{ pb.UnimplementedAuthServer }
 // Auth ...
 func (s *AUTHServer) Auth(ctx context.Context, req *pb.AuthRequest) (*pb.AuthResponse, error) {
 	var choiceNull, newName, newPass string
-	var a string
-	a = "123"
-	var b string
-	b = "123"
+	var a int
+	//a = "123"
+	//var b string
+	//b = "123"
+
+	psw = "123"
+	lg = "TEST"
 
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
 	db, err := sql.Open("postgres", psqlconn)
 	CheckError(err)
 	defer db.Close()
-	row, err := db.Query("SELECT * FROM users where pass=('psw') and login=('lg')")
+	row, err := db.Query("SELECT id FROM users where pass='" + psw + "' and login='" + lg + "'")
 	if err != nil {
 		panic(err)
 	}
 	defer row.Close()
+	datas := []data{}
 
-	if req.GetLogin() == a && req.GetPassword() == b { //
+	for row.Next() {
+		p := data{}
+		err := row.Scan(&p.id)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		datas = append(datas, p)
+		fmt.Println(p.id)
+		p.id = a
+	}
+
+	if id != 0 { //req.GetLogin() == a && req.GetPassword() == b
 		//row = nil
 		return &pb.AuthResponse{Res: "Hello"}, nil
 	} else {
-		fmt.Println(lg)
+		fmt.Println()
 		fmt.Println("user name not found. Would you like to register? (Y,N)")
 		fmt.Scan(&choiceNull)
 		switch choiceNull {
