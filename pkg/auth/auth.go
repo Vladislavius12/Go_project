@@ -33,7 +33,7 @@ type AUTHServer struct{ pb.UnimplementedAuthServer }
 
 // Auth ...
 func (s *AUTHServer) Auth(ctx context.Context, req *pb.AuthRequest) (*pb.AuthResponse, error) {
-	var choiceNull, newName, newPass string
+	var choiceNull string
 	var pas string
 	var name string
 	var criptLogin string
@@ -46,8 +46,8 @@ func (s *AUTHServer) Auth(ctx context.Context, req *pb.AuthRequest) (*pb.AuthRes
 
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	CheckError(err)
-	criptLogin = crypto.Cripting(GetID(name), *privateKey)
-	criptPass = crypto.Cripting(GetPassword(pas), *privateKey)
+	criptLogin = crypto.Cripting(name, *privateKey)
+	criptPass = crypto.Cripting(pas, *privateKey)
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
 	db, err := sql.Open("postgres", psqlconn)
@@ -57,7 +57,7 @@ func (s *AUTHServer) Auth(ctx context.Context, req *pb.AuthRequest) (*pb.AuthRes
 	descriptLogin = crypto.RSA_OAEP_Decrypt(criptLogin, *privateKey)
 	descriptPass = crypto.RSA_OAEP_Decrypt(criptPass, *privateKey)
 
-	if name == criptLogin && pas == criptPass {
+	if GetID(criptLogin) == criptLogin && GetPassword(criptPass) == criptPass {
 		return &pb.AuthResponse{Res: "Hello"}, nil
 	} else {
 		fmt.Println(descriptLogin)
@@ -66,8 +66,8 @@ func (s *AUTHServer) Auth(ctx context.Context, req *pb.AuthRequest) (*pb.AuthRes
 		fmt.Scan(&choiceNull)
 		switch choiceNull {
 		case "Y":
-			fmt.Println("Enter the desired name and password")
-			fmt.Scan(&newName, &newPass)
+			fmt.Println("Now you can enter usig new login and password")
+			//fmt.Scan(&newName, &newPass)
 			psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
 			// open db
@@ -75,7 +75,7 @@ func (s *AUTHServer) Auth(ctx context.Context, req *pb.AuthRequest) (*pb.AuthRes
 			CheckError(err)
 			defer db.Close()
 
-			_, err = db.Exec("insert into users (login, pass) values (" + newName + ", " + newPass + ")")
+			_, err = db.Exec("insert into users (login, pass) values ('" + criptLogin + "', '" + criptPass + "')")
 			if err != nil {
 				panic(err)
 			}
@@ -107,6 +107,7 @@ func Connect() {
 }
 
 func GetID(name string) string {
+	var rightname string
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
 	// open db
@@ -130,12 +131,18 @@ func GetID(name string) string {
 		}
 		datas = append(datas, p)
 		fmt.Println(p.login)
-		p.login = name
+		p.login = rightname
 	}
-	return name
+	if rightname != "" {
+		name = rightname
+	} else {
+		rightname = name
+	}
+	return rightname
 }
 
 func GetPassword(pas string) string {
+	var righpass string
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
 	// open db
@@ -159,9 +166,14 @@ func GetPassword(pas string) string {
 		}
 		datas = append(datas, p)
 		fmt.Println(p.pass)
-		p.pass = pas
+		p.pass = righpass
 	}
-	return pas
+	if righpass != "" {
+		pas = righpass
+	} else {
+		righpass = pas
+	}
+	return righpass
 }
 
 func CheckError(err error) {
