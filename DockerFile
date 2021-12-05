@@ -13,4 +13,4 @@ RUN apk --no-cache add ca-certificates
 COPY --from=build /go/bin/app /app
 ENTRYPOINT ["/go/bin/server"]
 LABEL Name=Go_project Version=0.1
-EXPOSE 5300
+EXPOSE 2377

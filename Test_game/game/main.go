@@ -21,57 +21,57 @@ func main() {
 
 		Legendprinter()
 
-		a := step1(tttb, "X")
-		bprinter(a)
-		b := step1(a, "O")
-		bprinter(b)
-		c := step1(b, "X")
-		bprinter(c)
-		d := step1(c, "O")
-		bprinter(d)
-		e := step1(d, "X")
-		bprinter(e)
+		a := Step1(tttb, "X")
+		Bprinter(a)
+		b := Step1(a, "O")
+		Bprinter(b)
+		c := Step1(b, "X")
+		Bprinter(c)
+		d := Step1(c, "O")
+		Bprinter(d)
+		e := Step1(d, "X")
+		Bprinter(e)
 		Legendprinter()
-		be := boardwinchecker(e)
+		be := Boardwinchecker(e)
 		if be == "nowinner" {
-			f := step1(e, "O")
-			bprinter(f)
-			bf := boardwinchecker(f)
+			f := Step1(e, "O")
+			Bprinter(f)
+			bf := Boardwinchecker(f)
 			if bf == "nowinner" {
-				bprinter(f)
-				g := step1(f, "X")
-				bg := boardwinchecker(g)
+				Bprinter(f)
+				g := Step1(f, "X")
+				bg := Boardwinchecker(g)
 				if bg == "nowinner" {
-					bprinter(g)
-					h := step1(g, "O")
-					bh := boardwinchecker(h)
+					Bprinter(g)
+					h := Step1(g, "O")
+					bh := Boardwinchecker(h)
 					if bh == "nowinner" {
-						bprinter(h)
-						i := step1(h, "X")
-						bi := boardwinchecker(i)
+						Bprinter(h)
+						i := Step1(h, "X")
+						bi := Boardwinchecker(i)
 						if bi == "nowinner" {
 							Legendprinter()
 							lastmessage := "CAT's GAME. (It was a draw.)"
-							bprinter(i)
+							Bprinter(i)
 							fmt.Println(lastmessage)
 						} else {
-							bprinter(i)
+							Bprinter(i)
 							fmt.Println(bi)
 						}
 					} else {
-						bprinter(h)
+						Bprinter(h)
 						fmt.Println(bh)
 					}
 				} else {
-					bprinter(g)
+					Bprinter(g)
 					fmt.Println(bg)
 				}
 			} else {
-				bprinter(f)
+				Bprinter(f)
 				fmt.Println(bf)
 			}
 		} else {
-			bprinter(e)
+			Bprinter(e)
 			fmt.Println(be)
 		}
 	}

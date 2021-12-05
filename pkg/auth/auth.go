@@ -150,7 +150,7 @@ func GetPassword(pas string) string {
 	CheckError(err)
 	defer db.Close()
 
-	row, err := db.Query("SELECT pass FROM users where pass='" + pas + "'")
+	row, err := db.Query("SELECT login FROM users where login='" + pas + "'")
 	if err != nil {
 		panic(err)
 	}
