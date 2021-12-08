@@ -1,14 +1,11 @@
-# Go_project(Text Tic Tac Toe)
+# Go_project(Text Roulette)
 ### Разработчик:
 - Gudov Vladislav
 ### Дата последнего обновления 30.11.2021
 ### Название
-- Tic Tac Toe
-- For two players
+- roulette
+- For one players
 
 ### Краткое описание и действия:
-` "Text Tic Tac Toe" This is a text game 
-in which you can fight your friend in real time`
-### Доступные персонажи
-1) X
-2) O
+`This is a game in which you can bet on the number that will appear on roulette`
+

@@ -16,16 +16,20 @@ func main() {
 	var stavka float64
 	var num, rightnumb int
 	rightnumb = GenerateNumb()
-	fmt.Print("Введите Вашу Ставку: ")
+	fmt.Print("Enter Your Bid: ")
 	fmt.Scan(&stavka)
-	fmt.Print("Выберете целое число на которое хотите поставить от 0 до 100: ")
+	fmt.Print("Select the integer you want to bet on from 0 to 100: ")
 	fmt.Scan(&num)
-	fmt.Print("Барабан крутиться\n")
-	fmt.Println("Выпало число: ", rightnumb)
+	fmt.Print("The drum is spinning\n")
+	fmt.Println("The number dropped out: ", rightnumb)
 
 	if rightnumb == num {
-		fmt.Println("Вы выиграли: ", stavka*2)
-	} else {
-		fmt.Print("Вы проиграли\n")
+		fmt.Println("You have won: ", stavka*2)
+	} else if stavka < 100 {
+		fmt.Print("You have lost your money\n")
+	} else if stavka > 1000 && stavka < 1000000 {
+		fmt.Print("You have lost your car\n")
+	} else if stavka > 1000000 {
+		fmt.Print("You have lost your life. Collectors will come for you in 30 minutes\n")
 	}
 }
