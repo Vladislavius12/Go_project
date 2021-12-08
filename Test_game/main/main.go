@@ -35,7 +35,7 @@ func main() {
 		fmt.Println("You have won: ", stavka*2)
 	}
 	for yourmoney > 0 {
-		fmt.Print("Do you want continue?\n")
+		fmt.Print("Do you want continue? y/n\n")
 		fmt.Scan(&choiceNull)
 		switch choiceNull {
 		case "y":
@@ -61,11 +61,11 @@ func main() {
 			yourmoney = yourmoney - stavka*2
 			fmt.Println("You have lost: ", stavka*2)
 		}
-		if yourmoney < 0 {
-			fmt.Println("You have not enough: ", stavka*2)
-		} else if yourmoney < -1000 && stavka < -1000000 {
+		if yourmoney < 0 && yourmoney > -1000 {
+			fmt.Println("You have not enough money: ", stavka*2)
+		} else if yourmoney > -1000 && stavka < -1000000 {
 			fmt.Print("You have lost your car\n")
-		} else if stavka < -1000000 {
+		} else if yourmoney < -1000000 {
 			fmt.Print("You have lost your life. Collectors will come for you in 30 minutes\n")
 		}
 
